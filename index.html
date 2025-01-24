@@ -13,11 +13,20 @@
         canvas {
             display: block;
         }
+
+        #info {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            width: 75px;
+            height: 75px;
+        }
     </style>
 </head>
 
 <body>
-
+    <div id="info"></div>
     <script type="importmap">
         {
             "imports": {
@@ -62,9 +71,11 @@
         //Flutter message sender
         function sendDataToFlutter(data) {
             if (window.FlutterChannel) {
+                document.getElementById("info").innerHTML = "Connected"
                 // Send the data as a string (Flutter only accepts strings via JavaScriptChannel)
                 window.FlutterChannel.postMessage(JSON.stringify(data));
             } else {
+                document.getElementById("info").innerHTML = "Not connected"
                 console.error("FlutterChannel is not available");
             }
         }
