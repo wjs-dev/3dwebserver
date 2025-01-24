@@ -88,7 +88,6 @@ function setupLighting() {
 
     const backgroundColor = new THREE.Color(0xffffff);
     renderer.setClearColor(backgroundColor);
-    //
 }
 
 /**
