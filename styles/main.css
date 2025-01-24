@@ -14,11 +14,12 @@ canvas {
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: #000000a8;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    flex-direction: column;
 }
 
 #loader {
@@ -35,6 +36,13 @@ canvas {
     height: 100%;
     background-color: #4CAF50;
     transition: width 0.3s ease-in-out;
+}
+
+#loader-text {
+    color: white;
+    margin-top: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 /* Info panel styling */
