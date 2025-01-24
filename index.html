@@ -120,11 +120,12 @@
             }
         }
 
+        //'https://wjs-dev.github.io/3dwebserver/assets/man.glb',
 
         // Load the GLB model
         const loader = new GLTFLoader();
         loader.load(
-            './assets/manbody-v2.glb',
+            'https://wjs-dev.github.io/3dwebserver/assets/manbody-v2.glb',
             function (gltf) {
                 scene.add(gltf.scene);
 
