@@ -85,6 +85,9 @@ function setupLighting() {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(0, 1, 0);
     scene.add(directionalLight);
+
+    const backgroundColor = new THREE.Color(0xffffff);
+    renderer.setClearColor(backgroundColor);
 }
 
 /**
