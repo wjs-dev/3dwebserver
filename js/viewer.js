@@ -44,14 +44,16 @@ function updateLoadingProgress(progress) {
 
 //Utilities
 function toggleFlesh() {
-    let fleshModelPath = "./assets/man_flesh.glb";
-    let colorModelPath = "./assets/man_colored.glb";
+    let fleshModelPath = "man_flesh.glb";
+    let colorModelPath = "man_colored.glb";
+    unloadModel();
     loadModel(fleshModelPath);
 }
 
 function toggleColor() {
-    let fleshModelPath = "./assets/man_flesh.glb";
-    let colorModelPath = "./assets/man_colored.glb";
+    let fleshModelPath = "man_flesh.glb";
+    let colorModelPath = "man_colored.glb";
+    unloadModel();
     loadModel(colorModelPath);
 }
 
@@ -222,24 +224,30 @@ function onMouseClick(event) {
 /**
  * Load the 3D model
  */
-function loadModel(modelPath) {
-    if(modelPath == undefined) {
-        modelPath = "/assets/man_flesh.glb";
-    }
+function loadModel(_modelPath) {
 
-    // let fleshModelPath = "./assets/man_flesh.glb";
-    // let colorModelPath = "./assets/man_colored.glb";
-    console.log(modelPath)
-    if(MODE == "PROD") {
-        // fleshModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
-        // colorModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_colored.glb";
-        modelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
+    // if(modelPath == undefined) {
+    //     modelPath = "/assets/man_flesh.glb";
+    // }
+
+    // // let fleshModelPath = "./assets/man_flesh.glb";
+    // // let colorModelPath = "./assets/man_colored.glb";
+    // console.log(modelPath)
+    // if(MODE == "PROD") {
+    //     // fleshModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
+    //     // colorModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_colored.glb";
+    //     modelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
+    // }
+    if(_modelPath == undefined) {
+        _modelPath = "man_flesh.glb";
     }
+    let modelPath = `https://wjs-dev.github.io/3dwebserver/assets/${_modelPath}`;
 
     const loader = new GLTFLoader();
     loader.load(
         modelPath,
         function (gltf) {
+            gltf.scene.name = "3dmodel";
             scene.add(gltf.scene);
             processLoadedModel(gltf.scene);
             updateLoadingProgress(100);
@@ -253,6 +261,12 @@ function loadModel(modelPath) {
         }
     );
 }
+
+
+function unloadModel() {
+    // scene.remove(scene.children[0]);
+    scene.remove(scene.getObjectByName("3dmodel"));
+}   
 
 /**
  * Process the loaded 3D model
