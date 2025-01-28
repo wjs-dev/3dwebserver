@@ -312,7 +312,11 @@ function setupEventListeners() {
  * Animation loop
  */
 function animate() {
-    requestAnimationFrame(animate);
+    setTimeout(() => {
+        requestAnimationFrame(animate);
+    }, 1000 / 30)
+    
+    
     controls.update();
     renderer.render(scene, camera);
 }
