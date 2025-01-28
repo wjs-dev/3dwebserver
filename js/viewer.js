@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-const MODE = "DEV"; //DEV or PROD
+const MODE = "PROD"; //DEV or PROD
 
 /**
  * Global variables for Three.js components
