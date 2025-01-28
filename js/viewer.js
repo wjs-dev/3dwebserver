@@ -209,15 +209,17 @@ function handleObjectInteraction(object) {
  * Load the 3D model
  */
 function loadModel() {
-    let modelPath = "./assets/manbody-v3.glb";
+    let fleshModelPath = "./assets/man_flesh.glb";
+    let colorModelPath = "./assets/man_colored.glb";
 
     if(MODE == "PROD") {
-        modelPath = "https://wjs-dev.github.io/3dwebserver/assets/manbody-v3.glb";
+        fleshModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
+        colorModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_colored.glb";
     }
 
     const loader = new GLTFLoader();
     loader.load(
-        modelPath,
+        colorModelPath,
         function (gltf) {
             scene.add(gltf.scene);
             processLoadedModel(gltf.scene);
