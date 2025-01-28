@@ -44,14 +44,14 @@ function updateLoadingProgress(progress) {
 
 //Utilities
 function toggleFlesh() {
-    let fleshModelPath = "man_flesh.glb";
+    let fleshModelPath = "man_normal.glb";
     let colorModelPath = "man_colored.glb";
     unloadModel();
     loadModel(fleshModelPath);
 }
 
 function toggleColor() {
-    let fleshModelPath = "man_flesh.glb";
+    let fleshModelPath = "man_normal.glb";
     let colorModelPath = "man_colored.glb";
     unloadModel();
     loadModel(colorModelPath);
@@ -239,7 +239,7 @@ function loadModel(_modelPath) {
     //     modelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
     // }
     if(_modelPath == undefined) {
-        _modelPath = "man_flesh.glb";
+        _modelPath = "man_normal.glb";
     }
     let modelPath = `https://wjs-dev.github.io/3dwebserver/assets/${_modelPath}`;
 
