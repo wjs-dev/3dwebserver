@@ -4,6 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const MODE = "PROD"; //DEV or PROD
 
+let man_model_normal = 'manClassic.glb';
+let man_model_colored = 'manColor.glb';
+let female_model_normal = 'femaleClassic.glb';
+let female_model_colored = 'femaleColor.glb';
+
 /**
  * Global variables for Three.js components
  */
@@ -44,17 +49,17 @@ function updateLoadingProgress(progress) {
 
 //Utilities
 function toggleFlesh() {
-    let fleshModelPath = "man_normal.glb";
-    let colorModelPath = "man_colored.glb";
+    //let fleshModelPath = "man_normal.glb";
+    //let colorModelPath = "man_colored.glb";
     unloadModel();
-    loadModel(fleshModelPath);
+    loadModel(man_model_normal);
 }
 
 function toggleColor() {
-    let fleshModelPath = "man_normal.glb";
-    let colorModelPath = "man_colored.glb";
+    //let fleshModelPath = "man_normal.glb";
+    //let colorModelPath = "man_colored.glb";
     unloadModel();
-    loadModel(colorModelPath);
+    loadModel(man_model_colored);
 }
 
 
