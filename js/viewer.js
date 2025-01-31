@@ -229,7 +229,7 @@ function onMouseClick(event) {
 /**
  * Load the 3D model
  */
-function loadModel(_modelPath) {
+function loadModel(_modelPath = man_model_normal) {
 
     // if(modelPath == undefined) {
     //     modelPath = "/assets/man_flesh.glb";
@@ -243,9 +243,7 @@ function loadModel(_modelPath) {
     //     // colorModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_colored.glb";
     //     modelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
     // }
-    if(_modelPath == undefined) {
-        _modelPath = "man_normal.glb";
-    }
+    
     let modelPath = `https://wjs-dev.github.io/3dwebserver/assets/${_modelPath}`;
 
     const loader = new GLTFLoader();
