@@ -12,7 +12,7 @@ let female_model_colored = 'femaleColor.glb';
 let defaultGender = "male";
 let defaultModelMode = "normal";
 
-
+let selectedBodyParts = [];
 /**
  * Global variables for Three.js components
  */
@@ -27,7 +27,7 @@ document.getElementById("model-mode-button").addEventListener("click", toggleMod
 
 document.getElementById("gender-button").addEventListener("click", toggleGender);
 
-let selectedBodyParts = [];
+
 
 if(MODE == "DEV") {
     document.getElementById("info").style.display = "block";
@@ -72,6 +72,7 @@ function toggleGender() {
         defaultGender = "male";
         genderButton.innerHTML = "👩🏼";
     }
+
 }
 
 function toggleModelMode() {
@@ -247,27 +248,6 @@ function onMouseClick(event) {
 }
 
 
-/**
- * Handle interaction with clicked objects
- * @param {THREE.Object3D} object - The clicked 3D object
- */
-// function handleObjectInteraction(object) {
-//     if (object.material) {
-//         // Store original color if not already stored
-//         if (!object.userData.originalColor) {
-//             object.userData.originalColor = object.material.color.clone();
-//         }
-
-//         // Toggle between original color and highlighted color
-//         if (object.userData.isHighlighted) {
-//             object.material.color.copy(object.userData.originalColor);
-//             object.userData.isHighlighted = false;
-//         } else {
-//             object.material.color.setHex(0xff0000); // Red highlight
-//             object.userData.isHighlighted = true;
-//         }
-//     }
-// }
 
 /**
  * Load the 3D model
@@ -285,6 +265,18 @@ function loadModel(_modelPath = man_model_normal) {
             scene.add(gltf.scene);
             processLoadedModel(gltf.scene);
             updateLoadingProgress(100);
+
+            // Optional: Name all meshes for better identification
+            gltf.scene.traverse((object) => {
+                if (object.isMesh) {
+                    
+                    if(object.name.includes("_")) {
+                        object.name = object.name.split("_")[0];
+                    }
+
+                    
+                }
+            });
         },
         function (xhr) {
             //console.log((xhr.loaded / xhr.total * 100) + '% loaded');
