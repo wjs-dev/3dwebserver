@@ -10,6 +10,7 @@ let female_model_normal = 'femaleClassic.glb';
 let female_model_colored = 'femaleColor.glb';
 
 let defaultGender = "male";
+let defaultModelMode = "normal";
 
 
 /**
@@ -21,8 +22,8 @@ let scene, camera, renderer, controls, raycaster, mouse;
  * Variables
  */
 
-document.getElementById("flesh-button").addEventListener("click", toggleFlesh);
-document.getElementById("color-button").addEventListener("click", toggleColor);
+document.getElementById("model-mode-button").addEventListener("click", toggleModelMode);
+
 
 document.getElementById("gender-button").addEventListener("click", toggleGender);
 
@@ -55,49 +56,52 @@ function updateLoadingProgress(progress) {
 }
 
 //Utilities
-function toggleFlesh() {
-    //let fleshModelPath = "man_normal.glb";
-    //let colorModelPath = "man_colored.glb";
-    unloadModel();
-    loadModel(man_model_normal);
-}
-
-function toggleColor() {
-    //let fleshModelPath = "man_normal.glb";
-    //let colorModelPath = "man_colored.glb";
-    unloadModel();
-    loadModel(man_model_colored);
-}
-
-function toggleMale() {
-    unloadModel();
-    loadModel(man_model_normal);
-}
-
-function toggleFemale() {
-    unloadModel();
-    loadModel(female_model_normal);
-}
-
 function toggleGender() {
     let genderButton =document.getElementById("gender-button");
 
     if(defaultGender == "male") {
         unloadModel();
-        loadModel(female_model_normal);
+
+        defaultModelMode === "normal" ? loadModel(female_model_normal) : loadModel(female_model_colored);
         defaultGender = "female";
-        genderButton.innerHTML = "♀";
+        genderButton.innerHTML = "👨🏼";
     } else {
         unloadModel();
-        loadModel(man_model_normal);
-        defaultGender = "male";
-        genderButton.innerHTML = "♂";
-    }
+        defaultModelMode === "normal" ? loadModel(man_model_normal) : loadModel(man_model_colored);
 
-    
+        defaultGender = "male";
+        genderButton.innerHTML = "👩🏼";
+    }
 }
 
+function toggleModelMode() {
+ 
+    unloadModel(); // Unload first since it's common for both cases
+    
 
+    let model;
+    if (defaultModelMode === "normal") {
+        if (defaultGender === "male") {
+            model = man_model_colored;
+        } else {
+            model = female_model_colored;
+        }
+
+        defaultModelMode = "colored";
+    } else {
+        if (defaultGender === "male") {
+            model = man_model_normal;
+        } else {
+            model = female_model_normal;
+        }
+
+        defaultModelMode = "normal";
+    }
+
+    defaultModelMode === "normal" ? document.getElementById("model-mode-button").innerHTML = "🎨" : document.getElementById("model-mode-button").innerHTML = "🖐🏼";
+
+    loadModel(model);
+}
 
 /**
  * Initialize the Three.js scene and all necessary components
@@ -141,9 +145,13 @@ function setupLighting() {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(0, 1, 0);
     scene.add(directionalLight);
+    
 
     const backgroundColor = new THREE.Color(0xffffff);
     renderer.setClearColor(backgroundColor);
+
+   
+
 }
 
 /**

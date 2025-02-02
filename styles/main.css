@@ -66,3 +66,49 @@ canvas {
     left: 20px;
     z-index: 100;
 }
+
+.model-button {
+    all: unset; /* Remove default button styles */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    text-align: center;
+    min-width: 100px;
+    user-select: none;
+    border: 2px solid black;
+}
+
+.model-button.primary {
+    background: #007AFF; /* iOS-style blue */
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.model-button.primary:hover {
+    background: #005FCC;
+}
+
+.model-button.primary:active {
+    background: #004699;
+    box-shadow: none;
+}
+
+.model-button.secondary {
+    background: #F5F5F5;
+    color: #333;
+}
+
+.model-button.secondary:hover {
+    background: #E0E0E0;
+}
+
+.model-button.secondary:active {
+    background: #CFCFCF;
+    box-shadow: none;
+}
