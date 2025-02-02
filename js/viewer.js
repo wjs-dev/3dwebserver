@@ -9,6 +9,9 @@ let man_model_colored = 'manColor.glb';
 let female_model_normal = 'femaleClassic.glb';
 let female_model_colored = 'femaleColor.glb';
 
+let defaultGender = "male";
+
+
 /**
  * Global variables for Three.js components
  */
@@ -22,6 +25,7 @@ document.getElementById("flesh-button").addEventListener("click", toggleFlesh);
 document.getElementById("color-button").addEventListener("click", toggleColor);
 document.getElementById("male-button").addEventListener("click", toggleMale);
 document.getElementById("female-button").addEventListener("click", toggleFemale);
+document.getElementById("gender-button").addEventListener("click", toggleGender);
 
 let selectedBodyParts = [];
 
@@ -74,6 +78,24 @@ function toggleMale() {
 function toggleFemale() {
     unloadModel();
     loadModel(female_model_normal);
+}
+
+function toggleGender() {
+    let genderButton =document.getElementById("gender-button");
+
+    if(defaultGender == "male") {
+        unloadModel();
+        loadModel(female_model_normal);
+        defaultGender = "female";
+        genderButton.innerHTML = "♀";
+    } else {
+        unloadModel();
+        loadModel(man_model_normal);
+        defaultGender = "male";
+        genderButton.innerHTML = "♂";
+    }
+
+    
 }
 
 
