@@ -56,3 +56,10 @@ canvas {
     border-radius: 5px;
     z-index: 100;
 }
+
+#button-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 100;
+}

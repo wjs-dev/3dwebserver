@@ -4,6 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const MODE = "PROD"; //DEV or PROD
 
+let man_model_normal = 'manClassic.glb';
+let man_model_colored = 'manColor.glb';
+let female_model_normal = 'femaleClassic.glb';
+let female_model_colored = 'femaleColor.glb';
+
 /**
  * Global variables for Three.js components
  */
@@ -12,6 +17,9 @@ let scene, camera, renderer, controls, raycaster, mouse;
 /**
  * Variables
  */
+
+document.getElementById("flesh-button").addEventListener("click", toggleFlesh);
+document.getElementById("color-button").addEventListener("click", toggleColor);
 
 let selectedBodyParts = [];
 
@@ -39,7 +47,20 @@ function updateLoadingProgress(progress) {
     }
 }
 
+//Utilities
+function toggleFlesh() {
+    //let fleshModelPath = "man_normal.glb";
+    //let colorModelPath = "man_colored.glb";
+    unloadModel();
+    loadModel(man_model_normal);
+}
 
+function toggleColor() {
+    //let fleshModelPath = "man_normal.glb";
+    //let colorModelPath = "man_colored.glb";
+    unloadModel();
+    loadModel(man_model_colored);
+}
 
 
 
@@ -187,38 +208,49 @@ function onMouseClick(event) {
  * Handle interaction with clicked objects
  * @param {THREE.Object3D} object - The clicked 3D object
  */
-function handleObjectInteraction(object) {
-    if (object.material) {
-        // Store original color if not already stored
-        if (!object.userData.originalColor) {
-            object.userData.originalColor = object.material.color.clone();
-        }
+// function handleObjectInteraction(object) {
+//     if (object.material) {
+//         // Store original color if not already stored
+//         if (!object.userData.originalColor) {
+//             object.userData.originalColor = object.material.color.clone();
+//         }
 
-        // Toggle between original color and highlighted color
-        if (object.userData.isHighlighted) {
-            object.material.color.copy(object.userData.originalColor);
-            object.userData.isHighlighted = false;
-        } else {
-            object.material.color.setHex(0xff0000); // Red highlight
-            object.userData.isHighlighted = true;
-        }
-    }
-}
+//         // Toggle between original color and highlighted color
+//         if (object.userData.isHighlighted) {
+//             object.material.color.copy(object.userData.originalColor);
+//             object.userData.isHighlighted = false;
+//         } else {
+//             object.material.color.setHex(0xff0000); // Red highlight
+//             object.userData.isHighlighted = true;
+//         }
+//     }
+// }
 
 /**
  * Load the 3D model
  */
-function loadModel() {
-    let modelPath = "./assets/manbody-v3.glb";
+function loadModel(_modelPath = man_model_normal) {
 
-    if(MODE == "PROD") {
-        modelPath = "https://wjs-dev.github.io/3dwebserver/assets/manbody-v3.glb";
-    }
+    // if(modelPath == undefined) {
+    //     modelPath = "/assets/man_flesh.glb";
+    // }
+
+    // // let fleshModelPath = "./assets/man_flesh.glb";
+    // // let colorModelPath = "./assets/man_colored.glb";
+    // console.log(modelPath)
+    // if(MODE == "PROD") {
+    //     // fleshModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
+    //     // colorModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_colored.glb";
+    //     modelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
+    // }
+    
+    let modelPath = `https://wjs-dev.github.io/3dwebserver/assets/${_modelPath}`;
 
     const loader = new GLTFLoader();
     loader.load(
         modelPath,
         function (gltf) {
+            gltf.scene.name = "3dmodel";
             scene.add(gltf.scene);
             processLoadedModel(gltf.scene);
             updateLoadingProgress(100);
@@ -232,6 +264,12 @@ function loadModel() {
         }
     );
 }
+
+
+function unloadModel() {
+    // scene.remove(scene.children[0]);
+    scene.remove(scene.getObjectByName("3dmodel"));
+}   
 
 /**
  * Process the loaded 3D model
@@ -277,7 +315,11 @@ function setupEventListeners() {
  * Animation loop
  */
 function animate() {
-    requestAnimationFrame(animate);
+    setTimeout(() => {
+        requestAnimationFrame(animate);
+    }, 1000 / 30)
+    
+    
     controls.update();
     renderer.render(scene, camera);
 }
