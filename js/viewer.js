@@ -20,6 +20,8 @@ let scene, camera, renderer, controls, raycaster, mouse;
 
 document.getElementById("flesh-button").addEventListener("click", toggleFlesh);
 document.getElementById("color-button").addEventListener("click", toggleColor);
+document.getElementById("male-button").addEventListener("click", toggleMale);
+document.getElementById("female-button").addEventListener("click", toggleFemale);
 
 let selectedBodyParts = [];
 
@@ -35,13 +37,15 @@ if(MODE == "DEV") {
  * @param {number} progress - Progress percentage (0-100)
  */
 function updateLoadingProgress(progress) {
+    const loaderContainer = document.getElementById('loader-container');
     const loaderBar = document.getElementById('loader-bar');
+
+    loaderContainer.style.display = 'flex';
     loaderBar.style.width = `${progress}%`;
     
     // Hide loader when loading is complete
     if (progress === 100) {
         setTimeout(() => {
-            const loaderContainer = document.getElementById('loader-container');
             loaderContainer.style.display = 'none';
         }, 1000); // Small delay to show completion
     }
@@ -60,6 +64,16 @@ function toggleColor() {
     //let colorModelPath = "man_colored.glb";
     unloadModel();
     loadModel(man_model_colored);
+}
+
+function toggleMale() {
+    unloadModel();
+    loadModel(man_model_normal);
+}
+
+function toggleFemale() {
+    unloadModel();
+    loadModel(female_model_normal);
 }
 
 
@@ -147,7 +161,7 @@ function sendDataToFlutter(data) {
             document.getElementById("info").innerHTML = "Not connected"
         }
 
-        console.error("FlutterChannel is not available");
+        //console.error("FlutterChannel is not available");
     }
 }
 
@@ -231,18 +245,6 @@ function onMouseClick(event) {
  */
 function loadModel(_modelPath = man_model_normal) {
 
-    // if(modelPath == undefined) {
-    //     modelPath = "/assets/man_flesh.glb";
-    // }
-
-    // // let fleshModelPath = "./assets/man_flesh.glb";
-    // // let colorModelPath = "./assets/man_colored.glb";
-    // console.log(modelPath)
-    // if(MODE == "PROD") {
-    //     // fleshModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
-    //     // colorModelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_colored.glb";
-    //     modelPath = "https://wjs-dev.github.io/3dwebserver/assets/man_flesh.glb";
-    // }
     
     let modelPath = `https://wjs-dev.github.io/3dwebserver/assets/${_modelPath}`;
 
@@ -317,7 +319,7 @@ function setupEventListeners() {
 function animate() {
     setTimeout(() => {
         requestAnimationFrame(animate);
-    }, 1000 / 30)
+    }, 1000 / 15)
     
     
     controls.update();
