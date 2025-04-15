@@ -75,6 +75,112 @@ function toggleGender() {
 
 }
 
+//Function that listens to flutter app.
+// Lichaamsdeel colored true / false.
+
+function _flutterToggleBodyPart(bodyPart, bool) {
+     
+    let x = null;
+
+    switch(bodyPart) {
+        case 1 || "RZ":
+            x = "RZ";
+            break;
+        case 2 || "PAR":
+            x = "PAR";
+            break;
+        case 3 || "RO": 
+            x = "RO";
+            break;
+        case 4 || "GR":
+            x = "GR";
+            break;
+        case 5 || "BE":
+            x = "BE";
+            break;
+        case 6 || "LG":
+            x = "LG";
+            break;
+        case 7 || "LBR":
+            x = "LBR";
+            break;  
+        case 8 || "DB":
+            x = "DB";
+            break;
+        case 9 || "GE":
+            x = "GE";
+            break;
+        case 10 || "OR":
+            x = "OR";
+            break;
+        case 11 || "BL":
+            x = "BL";
+            break;
+        case 12 || "PAL":
+            x = "PAL";
+            break;
+        case 13 || "LBL":
+            x = "LBL";
+            break;
+    }
+
+    if(bool) {
+        //Color the bodypart.
+        
+    } else {
+        //Original color. 
+    }
+
+    // if (object.material) {
+        //     // Clone the material if it hasn't been cloned already
+        //     if (!object.userData.isCloned) {
+        //         object.material = object.material.clone();
+        //         object.userData.isCloned = true;
+        //     }
+
+        //     // Toggle color between original and highlight
+        //     if (!object.userData.originalColor) {
+        //         object.userData.originalColor = object.material.color.clone();
+        //     }
+
+        
+
+        //     // if (object.userData.isHighlighted) {
+        //     //     //Already highlighted
+        //     //     object.material.color.copy(object.userData.originalColor); // Restore original color
+        //     //     object.userData.isHighlighted = false;
+        //     //     selectedBodyParts = selectedBodyParts.filter(part => part !== object.name);
+        //     //     //sendDataToFlutter(selectedBodyParts)
+
+        //     //     console.log(selectedBodyParts)
+        //     // } else {
+        //     //     //Highlight
+        //     //     object.material.color.setHex(0xff0000); // Red highlight
+        //     //     object.userData.isHighlighted = true;
+        //     //     selectedBodyParts.push(object.name)
+        //     //     //sendDataToFlutter(selectedBodyParts)
+                
+
+        //     //     console.log(selectedBodyParts)
+        //     // }
+        // }
+
+
+
+   
+
+
+
+}
+
+function flutterSendSelectedBodyPart() {
+    
+    //This function sends the selected body parts to the flutter app.
+    // 1 - 13
+}
+
+
+
 function toggleModelMode() {
  
     unloadModel(); // Unload first since it's common for both cases
@@ -134,6 +240,25 @@ function init() {
 
     // Add event listeners
     setupEventListeners();
+
+
+    // On the Flutter side, you can send messages to the JavaScript
+    // side using the WebViewController's evaluateJavascript method or similar APIs.
+
+    // For example, in Flutter: send "GE,true" to the JavaScript side
+    window.addEventListener("message", (event) => {
+        // Ensure the message is coming from the Flutter channel
+        if (event.data) {
+            const message = JSON.parse(event.data);
+           
+            const params = message.split(",");
+            _flutterToggleBodyPart(params[0], params[1]);
+        }
+    });
+
+
+    
+   
 }
 
 /**
@@ -195,6 +320,7 @@ function sendDataToFlutter(data) {
     }
 }
 
+
 /**
  * Handle mouse click events and object interaction
  * @param {MouseEvent} event - The mouse click event
@@ -212,38 +338,30 @@ function onMouseClick(event) {
     if (intersects.length > 0) {
         // Get the first intersected object
         const object = intersects[0].object;
-        console.log('Clicked object:', object.name);
 
-        if (object.material) {
-            // Clone the material if it hasn't been cloned already
-            if (!object.userData.isCloned) {
-                object.material = object.material.clone();
-                object.userData.isCloned = true;
-            }
+        const codeMap = {
+            RZ: { name: 'RZ', id: 1 },
+            PAR: { name: 'PAR', id: 2 },
+            RO: { name: 'RO', id: 3 },
+            GR: { name: 'GR', id: 4 },
+            BE: { name: 'BE', id: 5 },
+            LG: { name: 'LG', id: 6 },
+            LBR: { name: 'LBR', id: 7 },
+            DB: { name: 'DB', id: 8 },
+            GE: { name: 'GE', id: 9 },
+            OR: { name: 'OR', id: 10 },
+            BL: { name: 'BL', id: 11 },
+            PAL: { name: 'PAL', id: 12 },
+            LBL: { name: 'LBL', id: 13 },
+          };
+          
+          // Example usage:
+          const searchCode = (code) => codeMap[code] || null;
+          
+          //searchCode(object.name).id; // 9 (GE)
 
-            // Toggle color between original and highlight
-            if (!object.userData.originalColor) {
-                object.userData.originalColor = object.material.color.clone();
-            }
+          sendDataToFlutter(searchCode(object.name).id);
 
-            if (object.userData.isHighlighted) {
-                //Already highlighted
-                object.material.color.copy(object.userData.originalColor); // Restore original color
-                object.userData.isHighlighted = false;
-                selectedBodyParts = selectedBodyParts.filter(part => part !== object.name);
-                sendDataToFlutter(selectedBodyParts)
-
-                console.log(selectedBodyParts)
-            } else {
-                //Highlight
-                object.material.color.setHex(0xff0000); // Red highlight
-                object.userData.isHighlighted = true;
-                selectedBodyParts.push(object.name)
-                sendDataToFlutter(selectedBodyParts)
-
-                console.log(selectedBodyParts)
-            }
-        }
     }
 }
 
@@ -268,8 +386,7 @@ function loadModel(_modelPath = man_model_normal) {
 
             // Optional: Name all meshes for better identification
             gltf.scene.traverse((object) => {
-                if (object.isMesh) {
-                    
+                if (object.isMesh) {     
                     if(object.name.includes("_")) {
                         object.name = object.name.split("_")[0];
                     }
