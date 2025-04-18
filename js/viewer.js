@@ -255,7 +255,8 @@ function getBodyPartFromId(id) {
 }
 
 function toggleBodyPartColor(part, bool) {
-    console.log("Part: ", part);
+
+    bool = (bool === "true");
 
     if(part.length == 1) {
         console.log("Part length == 1 ");
