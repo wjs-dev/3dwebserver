@@ -115,12 +115,8 @@ function init() {
     // Add event listeners
     setupEventListeners();
 
-
-    // On the Flutter side, you can send messages to the JavaScript
-    // side using the WebViewController's evaluateJavascript method or similar APIs.
-
-    // For example, in Flutter: send "GE,true" to the JavaScript side
     window.addEventListener("message", (event) => {
+        alert(event.data);
         // Ensure the message is coming from the Flutter channel
         if (event.data) {
             const message = event.data;
