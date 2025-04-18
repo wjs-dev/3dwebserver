@@ -1,3 +1,9 @@
+/*
+ * Possible flutter channel commands:
+ * "cbp,1,true"
+ *
+ */
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -10,9 +16,11 @@ let female_model_normal = 'femaleClassic.glb';
 let female_model_colored = 'femaleColor.glb';
 
 let defaultGender = "male";
-let defaultModelMode = "normal";
+let defaultModelMode = "colored";
 
 let selectedBodyParts = [];
+
+let _gltf = null;
 /**
  * Global variables for Three.js components
  */
@@ -22,11 +30,11 @@ let scene, camera, renderer, controls, raycaster, mouse;
  * Variables
  */
 
-document.getElementById("model-mode-button").addEventListener("click", toggleModelMode);
+// document.getElementById("model-mode-button").addEventListener("click", toggleModelMode);
+// document.getElementById("gender-button").addEventListener("click", toggleGender);
 
-
-document.getElementById("gender-button").addEventListener("click", toggleGender);
-
+// document.getElementById("test-button").addEventListener("click", () => {toggleBodyPartColor("OR", true)});
+// document.getElementById("test-button2").addEventListener("click", () => {toggleBodyPartColor("OR", false)});
 
 
 if(MODE == "DEV") {
@@ -75,142 +83,6 @@ function toggleGender() {
 
 }
 
-//Function that listens to flutter app.
-// Lichaamsdeel colored true / false.
-
-function _flutterToggleBodyPart(bodyPart, bool) {
-     
-    let x = null;
-
-    switch(bodyPart) {
-        case 1 || "RZ":
-            x = "RZ";
-            break;
-        case 2 || "PAR":
-            x = "PAR";
-            break;
-        case 3 || "RO": 
-            x = "RO";
-            break;
-        case 4 || "GR":
-            x = "GR";
-            break;
-        case 5 || "BE":
-            x = "BE";
-            break;
-        case 6 || "LG":
-            x = "LG";
-            break;
-        case 7 || "LBR":
-            x = "LBR";
-            break;  
-        case 8 || "DB":
-            x = "DB";
-            break;
-        case 9 || "GE":
-            x = "GE";
-            break;
-        case 10 || "OR":
-            x = "OR";
-            break;
-        case 11 || "BL":
-            x = "BL";
-            break;
-        case 12 || "PAL":
-            x = "PAL";
-            break;
-        case 13 || "LBL":
-            x = "LBL";
-            break;
-    }
-
-    if(bool) {
-        //Color the bodypart.
-        
-    } else {
-        //Original color. 
-    }
-
-    
-
-    // if (object.material) {
-        //     // Clone the material if it hasn't been cloned already
-        //     if (!object.userData.isCloned) {
-        //         object.material = object.material.clone();
-        //         object.userData.isCloned = true;
-        //     }
-
-        //     // Toggle color between original and highlight
-        //     if (!object.userData.originalColor) {
-        //         object.userData.originalColor = object.material.color.clone();
-        //     }
-
-        
-
-        //     // if (object.userData.isHighlighted) {
-        //     //     //Already highlighted
-        //     //     object.material.color.copy(object.userData.originalColor); // Restore original color
-        //     //     object.userData.isHighlighted = false;
-        //     //     selectedBodyParts = selectedBodyParts.filter(part => part !== object.name);
-        //     //     //sendDataToFlutter(selectedBodyParts)
-
-        //     //     console.log(selectedBodyParts)
-        //     // } else {
-        //     //     //Highlight
-        //     //     object.material.color.setHex(0xff0000); // Red highlight
-        //     //     object.userData.isHighlighted = true;
-        //     //     selectedBodyParts.push(object.name)
-        //     //     //sendDataToFlutter(selectedBodyParts)
-                
-
-        //     //     console.log(selectedBodyParts)
-        //     // }
-        // }
-
-
-
-   
-
-
-
-}
-
-function flutterSendSelectedBodyPart() {
-    
-    //This function sends the selected body parts to the flutter app.
-    // 1 - 13
-}
-
-
-
-function toggleModelMode() {
- 
-    unloadModel(); // Unload first since it's common for both cases
-    
-
-    let model;
-    if (defaultModelMode === "normal") {
-        if (defaultGender === "male") {
-            model = man_model_colored;
-        } else {
-            model = female_model_colored;
-        }
-
-        defaultModelMode = "colored";
-    } else {
-        if (defaultGender === "male") {
-            model = man_model_normal;
-        } else {
-            model = female_model_normal;
-        }
-
-        defaultModelMode = "normal";
-    }
-
-    defaultModelMode === "normal" ? document.getElementById("model-mode-button").innerHTML = "🎨" : document.getElementById("model-mode-button").innerHTML = "🖐🏼";
-
-    loadModel(model);
-}
 
 /**
  * Initialize the Three.js scene and all necessary components
@@ -251,10 +123,13 @@ function init() {
     window.addEventListener("message", (event) => {
         // Ensure the message is coming from the Flutter channel
         if (event.data) {
-            const message = JSON.parse(event.data);
-           
-            const params = message.split(",");
-            _flutterToggleBodyPart(params[0], params[1]);
+            const message = event.data;
+            let splitted = message.split(",")
+            if(splitted.length != 3) {
+                if(splitted[0] == "cbp") {
+                    toggleBodyPartColor(splitted[1], splitted[2]);
+                }
+            }
         }
     });
 
@@ -298,29 +173,6 @@ function setupRaycaster() {
     mouse = new THREE.Vector2();
 }
 
-/*
-* Flutter message sender
-*/
-function sendDataToFlutter(data) {
-    if (window.FlutterChannel) {
-
-        if(MODE == "DEV") {
-            document.getElementById("info").style.backgroundColor = "green";
-            document.getElementById("info").innerHTML = "Connected"
-        }
-
-        // Send the data as a string (Flutter only accepts strings via JavaScriptChannel)
-        window.FlutterChannel.postMessage(JSON.stringify(data));
-    } else {
-
-        if(MODE == "DEV") {
-            document.getElementById("info").style.backgroundColor = "red";
-            document.getElementById("info").innerHTML = "Not connected"
-        }
-
-        //console.error("FlutterChannel is not available");
-    }
-}
 
 
 /**
@@ -340,6 +192,7 @@ function onMouseClick(event) {
     if (intersects.length > 0) {
         // Get the first intersected object
         const object = intersects[0].object;
+        // console.log(object);
 
         const codeMap = {
             RZ: { name: 'RZ', id: 1 },
@@ -357,22 +210,91 @@ function onMouseClick(event) {
             LBL: { name: 'LBL', id: 13 },
           };
           
-          // Example usage:
-          const searchCode = (code) => codeMap[code] || null;
-          
-          //searchCode(object.name).id; // 9 (GE)
+        // Example usage:
+        const searchCode = (code) => codeMap[code] || null;
+        
+        //searchCode(object.name).id; // 9 (GE)
 
-          sendDataToFlutter(searchCode(object.name).id);
+    
+        sendDataToFlutter(searchCode(object.name).id);
+
+          
 
     }
 }
 
+function sendDataToFlutter(data) {
+
+    // Send data to Flutter through the flutter channel
+    console.log("Sending data to Flutter:", data);
+    if(window.FlutterChannel) {
+        window.FlutterChannel.postMessage(JSON.stringify(data));
+    } else {
+        console.warn("No flutter channel connected.");
+    }
+    
+}
+
+function getBodyPartFromId(id) {
+    switch (id) {
+        case 1: return 'RZ';
+        case 2: return 'PAR';
+        case 3: return 'RO';
+        case 4: return 'GR';
+        case 5: return 'BE';
+        case 6: return 'LG';
+        case 7: return 'LBR';
+        case 8: return 'DB';
+        case 9: return 'GE';
+        case 10: return 'OR';
+        case 11: return 'BL';
+        case 12: return 'PAL';
+        case 13: return 'LBL';
+        default: return null;
+    }
+}
+
+function toggleBodyPartColor(part, bool) {
+
+    if(part.length == 1) {
+        part = getBodyPartFromId(part);
+    }
+    
+    scene.traverse((object) => {
+       if(object.name == part) {
+        //Clone and store original color to turn the color back if needed. 
+        //Color it.
+        if (object.material) {
+            // Clone the material if it hasn't been cloned already
+            if (!object.userData.isCloned) {
+                object.material = object.material.clone();
+                object.userData.isCloned = true;
+            }
+
+            // Toggle color between original and highlight
+            if (!object.userData.originalColor) {
+                object.userData.originalColor = object.material.color.clone();
+            }
+
+            if (bool) {
+                object.material.color.setHex(0xff0000); // Red highlight
+                object.userData.isHighlighted = true;
+            } else {
+                object.material.color.copy(object.userData.originalColor); // Restore original color
+                object.userData.isHighlighted = false;
+            }
+        }
+       }
+    });
+
+
+    }
 
 
 /**
  * Load the 3D model
  */
-function loadModel(_modelPath = man_model_normal) {
+function loadModel(_modelPath = man_model_colored) {
 
     
     let modelPath = `https://wjs-dev.github.io/3dwebserver/assets/${_modelPath}`;
@@ -381,6 +303,7 @@ function loadModel(_modelPath = man_model_normal) {
     loader.load(
         modelPath,
         function (gltf) {
+            _gltf = gltf;
             gltf.scene.name = "3dmodel";
             scene.add(gltf.scene);
             processLoadedModel(gltf.scene);
@@ -390,6 +313,7 @@ function loadModel(_modelPath = man_model_normal) {
             gltf.scene.traverse((object) => {
                 if (object.isMesh) {     
                     if(object.name.includes("_")) {
+                        
                         object.name = object.name.split("_")[0];
                     }
 
