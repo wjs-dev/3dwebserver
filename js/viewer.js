@@ -125,7 +125,7 @@ function init() {
         if (event.data) {
             const message = event.data;
             let splitted = message.split(",")
-            if(splitted.length != 3) {
+            if(splitted.length == 3) {
                 if(splitted[0] == "cbp") {
                     toggleBodyPartColor(splitted[1], splitted[2]);
                 }
