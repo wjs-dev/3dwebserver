@@ -131,6 +131,8 @@ function _flutterToggleBodyPart(bodyPart, bool) {
         //Original color. 
     }
 
+    
+
     // if (object.material) {
         //     // Clone the material if it hasn't been cloned already
         //     if (!object.userData.isCloned) {
