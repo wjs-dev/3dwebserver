@@ -116,13 +116,16 @@ function init() {
     setupEventListeners();
 
     window.addEventListener("message", (event) => {
-        alert(event.data);
+        // alert(event.data);
+        console.log(event.data);
         // Ensure the message is coming from the Flutter channel
         if (event.data) {
             const message = event.data;
             let splitted = message.split(",")
+            console.log(splitted);
             if(splitted.length == 3) {
                 if(splitted[0] == "cbp") {
+                    console.log("Toggling..");
                     toggleBodyPartColor(splitted[1], splitted[2]);
                 }
             }
@@ -232,6 +235,7 @@ function sendDataToFlutter(data) {
 }
 
 function getBodyPartFromId(id) {
+    id = Number(id);
     switch (id) {
         case 1: return 'RZ';
         case 2: return 'PAR';
@@ -251,13 +255,19 @@ function getBodyPartFromId(id) {
 }
 
 function toggleBodyPartColor(part, bool) {
+    console.log("Part: ", part);
 
     if(part.length == 1) {
+        console.log("Part length == 1 ");
         part = getBodyPartFromId(part);
     }
+
+    console.log("Part: ", part);
     
     scene.traverse((object) => {
+        // console.log("Traversing..");
        if(object.name == part) {
+        console.log("Found object: ", object.name);
         //Clone and store original color to turn the color back if needed. 
         //Color it.
         if (object.material) {
